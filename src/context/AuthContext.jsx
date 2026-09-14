@@ -3,15 +3,43 @@ import { getStudents, OWNER_CREDENTIALS, initStore, addLoginLog, getWhatsAppLink
 
 const AuthContext = createContext(null)
 
-export function AuthProvider({ children }) {
-  const [user, setUser] = useState(() => {
+// قراءة الجلسة المحفوظة بأمان — مع إلغاء أي جلسة مالك قديمة بعد تغيير بيانات الدخول
+function readSavedUser() {
+  try {
     const saved = localStorage.getItem('elmona_user')
-    return saved ? JSON.parse(saved) : null
-  })
+    if (!saved) return null
+    const u = JSON.parse(saved)
+    if (!u || typeof u !== 'object' || !u.role) {
+      localStorage.removeItem('elmona_user')
+      return null
+    }
+    // جلسة مالك من نسخة قديمة (بيانات دخول مختلفة عن الحالية) = ملغاة، لازم يسجل دخول من جديد
+    if (u.role === 'owner' && (u.username !== OWNER_CREDENTIALS.username || u.password !== OWNER_CREDENTIALS.password)) {
+      localStorage.removeItem('elmona_user')
+      return null
+    }
+    return u
+  } catch {
+    try { localStorage.removeItem('elmona_user') } catch {}
+    return null
+  }
+}
+
+export function AuthProvider({ children }) {
+  const [user, setUser] = useState(() => readSavedUser())
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     initStore()
+  }, [])
+
+  // مزامنة الجلسة بين التابات المفتوحة في نفس المتصفح (دخول/خروج في تاب يظهر في الباقي فوراً)
+  useEffect(() => {
+    const onStorage = (e) => {
+      if (e.key === 'elmona_user') setUser(readSavedUser())
+    }
+    window.addEventListener('storage', onStorage)
+    return () => window.removeEventListener('storage', onStorage)
   }, [])
 
   const login = (identifier, password, role) => {

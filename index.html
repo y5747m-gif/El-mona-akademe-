@@ -6,6 +6,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>أكاديمية المنى — El Mona Akademe</title>
     <meta name="description" content="أكاديمية المنى - منصة تعليمية متكاملة للثانوية العامة مع بث مباشر ومتابعة يومية" />
+    <!-- منع المتصفح من تخزين نسخة قديمة من الصفحة بعد أي تحديث للموقع -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <script>
+      // حارس تحديث: لو فشل تحميل ملفات الموقع (بعد نشر نسخة جديدة والصفحة القديمة في الكاش)
+      // يعمل ريفرش تلقائي مرة واحدة فقط — بدل ما تظهر صفحة بيضاء أو خطأ للمستخدم
+      ;(function () {
+        var retried = false
+        try { retried = !!sessionStorage.getItem('elmona_asset_retry') } catch (e) {}
+        if (retried) return
+        window.addEventListener('error', function (ev) {
+          var t = ev.target && ev.target.tagName
+          if (t === 'SCRIPT' || t === 'LINK') {
+            try { sessionStorage.setItem('elmona_asset_retry', '1') } catch (e) {}
+            location.reload()
+          }
+        }, true)
+      })()
+    </script>
   </head>
   <body>
     <div id="root"></div>
