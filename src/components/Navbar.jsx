@@ -1,4 +1,4 @@
-import { Link, useNavigate, useLocation } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { LogOut, LayoutDashboard, Radio, Menu, X, GraduationCap, Sparkles } from 'lucide-react'
 import { useState, useEffect } from 'react'
@@ -6,9 +6,8 @@ import { useAuth } from '../context/AuthContext'
 import { getLive } from '../data/store'
 
 export default function Navbar() {
-  const { user, logout, isOwner, isStudent } = useAuth()
+  const { user, logout, isOwner } = useAuth()
   const navigate = useNavigate()
-  const location = useLocation()
   const [mobileOpen, setMobileOpen] = useState(false)
   const [live, setLive] = useState(getLive())
   const [scrolled, setScrolled] = useState(false)
@@ -31,7 +30,6 @@ export default function Navbar() {
   const navLinks = [
     { to: '/', label: 'الرئيسية' },
     { to: '/#courses', label: 'الكورسات' },
-    { to: '/#teachers', label: 'المدرسين' },
     { to: '/#about', label: 'عن الأكاديمية' },
   ]
 
@@ -93,15 +91,9 @@ export default function Navbar() {
             )}
 
             {!user ? (
-              <>
-                <Link to="/login?role=student" className="hidden sm:inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white border border-[#E2E8F0] text-sm font-bold text-[#0B2447] hover:bg-[#F8FAFC] transition">
-                  دخول الطلاب
-                </Link>
-                <Link to="/login?role=owner" className="inline-flex items-center gap-2 px-5 sm:px-6 py-2.5 rounded-full bg-gradient-to-br from-[#0B2447] to-[#19376D] text-white text-sm font-black shadow-[0_8px_20px_rgba(11,36,71,0.3)] hover:shadow-[0_12px_28px_rgba(11,36,71,0.4)] hover:scale-[1.02] transition-all btn-shimmer">
-                  <span className="hidden sm:inline">دخول المالك</span>
-                  <span className="sm:hidden">المالك</span>
-                </Link>
-              </>
+              <Link to="/login" className="inline-flex items-center gap-2 px-6 sm:px-7 py-2.5 rounded-full bg-gradient-to-br from-[#0B2447] to-[#19376D] text-white text-sm font-black shadow-[0_8px_20px_rgba(11,36,71,0.3)] hover:shadow-[0_12px_28px_rgba(11,36,71,0.4)] hover:scale-[1.02] transition-all btn-shimmer">
+                دخول الطلاب
+              </Link>
             ) : (
               <div className="flex items-center gap-2">
                 <Link
@@ -144,9 +136,9 @@ export default function Navbar() {
                 <a key={l.label} href={l.to} onClick={() => setMobileOpen(false)} className="px-4 py-3 rounded-xl text-sm font-bold hover:bg-[#F8FAFC] text-[#0B2447]">{l.label}</a>
               ))}
               {!user && (
-                <div className="grid grid-cols-2 gap-2 mt-3 pt-3 border-t">
-                  <Link to="/login?role=student" onClick={() => setMobileOpen(false)} className="py-3 rounded-xl bg-[#F1F5F9] text-center font-bold text-sm">دخول الطلاب</Link>
-                  <Link to="/login?role=owner" onClick={() => setMobileOpen(false)} className="py-3 rounded-xl bg-[#0B2447] text-white text-center font-bold text-sm">دخول المالك</Link>
+                <div className="mt-3 pt-3 border-t">
+                  <Link to="/login" onClick={() => setMobileOpen(false)} className="block py-3 rounded-xl bg-[#0B2447] text-white text-center font-bold text-sm">دخول الطلاب</Link>
+                  <div className="text-[11px] font-bold text-[#94A3B8] text-center mt-2">للطالب فقط — واجهة المالك محمية</div>
                 </div>
               )}
             </nav>

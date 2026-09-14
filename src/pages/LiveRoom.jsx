@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react'
 import { motion } from 'framer-motion'
-import { Radio, Users, MessageCircle, Send, Video, Mic, MicOff, VideoOff, PhoneOff, Maximize2, Crown, GraduationCap, Clock, Eye, Share2, Heart, Sparkles, AlertCircle } from 'lucide-react'
+import { Radio, Users, MessageCircle, Send, Video, Mic, MicOff, VideoOff, PhoneOff, Maximize2, Crown, GraduationCap, Clock, Eye, Share2, Heart, Sparkles, AlertCircle, BookOpen } from 'lucide-react'
 import { getLive, saveLive, getStudents } from '../data/store'
 import { useAuth } from '../context/AuthContext'
 import { Link } from 'react-router-dom'
@@ -25,7 +25,6 @@ export default function LiveRoom() {
     if (chatRef.current) chatRef.current.scrollTop = chatRef.current.scrollHeight
   }, [live.chat])
 
-  // If owner and live, try to show camera
   useEffect(() => {
     if (isOwner && live.isLive && !stream) {
       navigator.mediaDevices.getUserMedia({ video: true, audio: true })
@@ -47,7 +46,6 @@ export default function LiveRoom() {
 
   return (
     <div dir="rtl" className="min-h-screen bg-[#070F1F] pt-[72px]">
-      {/* Top bar */}
       <div className="sticky top-[72px] z-30 bg-[#0B2447] border-y border-white/10">
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
@@ -82,15 +80,12 @@ export default function LiveRoom() {
       </div>
 
       <div className="max-w-[1440px] mx-auto p-3 sm:p-4 lg:p-6 grid lg:grid-cols-[1fr_380px] gap-4 sm:gap-6">
-        {/* Video */}
         <div className="space-y-4">
           <div className="relative rounded-[24px] overflow-hidden bg-black aspect-[16/9] shadow-[0_24px_64px_rgba(0,0,0,0.5)] border border-white/10">
             {live.isLive ? (
               <>
-                {/* Video stream */}
                 <video ref={videoRef} autoPlay muted={isOwner} playsInline className="w-full h-full object-cover" />
 
-                {/* Fallback pattern when no stream */}
                 {!stream && (
                   <div className="absolute inset-0 bg-gradient-to-br from-[#0B2447] via-[#19376D] to-[#0B2447] flex items-center justify-center">
                     <div className="absolute inset-0 opacity-20" style={{ backgroundImage: `radial-gradient(circle at 1px 1px, white 1px, transparent 0)`, backgroundSize: '20px 20px' }} />
@@ -99,13 +94,12 @@ export default function LiveRoom() {
                         <Video className="w-8 h-8 text-white" />
                       </div>
                       <div className="font-black text-white text-lg mt-4">{live.title}</div>
-                      <div className="text-white/70 text-sm font-bold">د. أحمد المنى • بث تجريبي</div>
-                      {!isOwner && <div className="mt-3 inline-flex items-center gap-2 bg-white text-[#0B2447] px-4 py-2 rounded-full text-xs font-black">الصوت والصورة تعمل بشكل طبيعي</div>}
+                      <div className="text-white/70 text-sm font-bold">أكاديمية المنى • بث مباشر</div>
+                      {!isOwner && <div className="mt-3 inline-flex items-center gap-2 bg-white text-[#0B2447] px-4 py-2 rounded-full text-xs font-black">البث يعمل بشكل طبيعي</div>}
                     </div>
                   </div>
                 )}
 
-                {/* Overlays */}
                 <div className="absolute top-4 right-4 flex items-center gap-2">
                   <span className="bg-red-600 text-white text-xs font-black px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-lg">
                     <span className="w-2 h-2 bg-white rounded-full animate-pulse" />
@@ -122,7 +116,6 @@ export default function LiveRoom() {
                   جودة عالية • HD
                 </div>
 
-                {/* Bottom bar */}
                 <div className="absolute bottom-0 inset-x-0 p-3 sm:p-4 bg-gradient-to-t from-black/80 via-black/30 to-transparent">
                   <div className="flex items-center justify-between gap-3">
                     <div className="flex items-center gap-2">
@@ -138,7 +131,7 @@ export default function LiveRoom() {
                     </div>
 
                     <div className="flex items-center gap-2">
-                      <span className="hidden sm:inline-flex bg-white text-[#0B2447] text-xs font-black px-3 py-1.5 rounded-full">01:24:18</span>
+                      <span className="hidden sm:inline-flex bg-white text-[#0B2447] text-xs font-black px-3 py-1.5 rounded-full">بث حي</span>
                       <button className="w-10 h-10 rounded-full bg-white/15 backdrop-blur border border-white/20 text-white flex items-center justify-center hover:bg-white/20 transition">
                         <Maximize2 className="w-4 h-4" />
                       </button>
@@ -165,7 +158,7 @@ export default function LiveRoom() {
                   </div>
                   <h3 className="font-black text-white text-xl sm:text-2xl mt-6">البث غير نشط حالياً</h3>
                   <p className="text-white/60 text-sm font-bold mt-2 max-w-[420px] leading-relaxed">
-                    {isOwner ? 'ابدأ البث من لوحة تحكم المالك وسيظهر فوراً لكل الطلاب مع إشعار مباشر.' : 'سيبدأ البث فور قيام الإدارة بالبث المباشر. ستصلك إشعارات وتظهر لك زر الانضمام تلقائياً.'}
+                    {isOwner ? 'ابدأ البث من لوحة تحكم المالك وسيظهر فوراً لكل الطلاب مع إشعار مباشر.' : 'سيبدأ البث فور قيام الإدارة بالبث المباشر.'}
                   </p>
 
                   {isOwner ? (
@@ -184,7 +177,7 @@ export default function LiveRoom() {
                     {[
                       { k: 'HD', l: 'جودة عالية' },
                       { k: 'Live Chat', l: 'شات مباشر' },
-                      { k: '0 تأخير', l: 'بدون تقطيع' },
+                      { k: 'آمن', l: 'بدون تقطيع' },
                     ].map(s => (
                       <div key={s.l} className="bg-white/10 backdrop-blur border border-white/10 rounded-2xl p-3 text-center">
                         <div className="font-black text-white text-sm">{s.k}</div>
@@ -197,16 +190,17 @@ export default function LiveRoom() {
             )}
           </div>
 
-          {/* Info */}
           <div className="bg-white rounded-[20px] p-5 border border-[#E2E8F0] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-center gap-3">
-              <img src="https://i.pravatar.cc/100?img=11" alt="" className="w-12 h-12 rounded-2xl object-cover border-2 border-[#E2E8F0]" />
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#0B2447] to-[#19376D] flex items-center justify-center">
+                <BookOpen className="w-6 h-6 text-white" />
+              </div>
               <div className="text-right">
                 <div className="font-black text-[#0B2447] flex items-center gap-2">
-                  د. أحمد المنى
-                  <span className="bg-[#0B2447] text-white text-[11px] font-black px-2 py-0.5 rounded-full">خبير فيزياء</span>
+                  أكاديمية المنى
+                  <span className="bg-[#0B2447] text-white text-[11px] font-black px-2 py-0.5 rounded-full">بث مباشر</span>
                 </div>
-                <div className="text-xs font-bold text-[#64748B]">20 سنة خبرة • 4.9 ⭐ • 1,342 طالب حالياً</div>
+                <div className="text-xs font-bold text-[#64748B]">منصة تعليمية متكاملة • بث تفاعلي</div>
               </div>
             </div>
             <div className="flex items-center gap-2">
@@ -220,24 +214,22 @@ export default function LiveRoom() {
             </div>
           </div>
 
-          {/* Description */}
           <div className="bg-white rounded-[20px] p-5 border border-[#E2E8F0]">
             <h3 className="font-black text-[#0B2447] flex items-center gap-2">
               <Sparkles className="w-4 h-4 text-[#C5A253]" />
-              عن هذه الحصة
+              عن البث المباشر
             </h3>
             <p className="mt-2 text-sm font-bold text-[#475569] leading-7">
-              مراجعة شاملة للفصل الثاني (التيار الكهربي) مع حل أهم أفكار كتاب الامتحان والكتاب المدرسي. مذكرة PDF + واجب مصحح + اختبار إلكتروني بعد الحصة.
+              بث مباشر تفاعلي مع شات فوري وسبورة ذكية. يمكن للمالك بدء البث بضغطة زر وسيظهر فوراً لكل الطلاب المسجلين مع إمكانية التفاعل والأسئلة.
             </p>
             <div className="flex flex-wrap gap-2 mt-3">
-              {['#فيزياء_3ث', '#مراجعة_نهائية', '#البث_المباشر', '#المنى_أكاديمي'].map(tag => (
+              {['#البث_المباشر', '#المنى_أكاديمي', '#تعليم_تفاعلي'].map(tag => (
                 <span key={tag} className="bg-[#F1F5F9] text-[#475569] text-xs font-black px-3 py-1.5 rounded-full">{tag}</span>
               ))}
             </div>
           </div>
         </div>
 
-        {/* Chat */}
         <div className="bg-white rounded-[24px] border border-[#E2E8F0] shadow-[0_8px_32px_rgba(0,0,0,0.08)] overflow-hidden flex flex-col h-[640px] lg:h-[760px]">
           <div className="p-4 border-b border-[#E2E8F0] flex items-center justify-between bg-[#F8FAFC]">
             <h3 className="font-black text-[#0B2447] flex items-center gap-2">
@@ -258,7 +250,7 @@ export default function LiveRoom() {
                 </div>
                 <div className="text-right">
                   <div className="font-black text-sm text-[#92400E]">الشات متاح عند بدء البث فقط</div>
-                  <div className="text-xs font-bold text-[#B45309] leading-relaxed">عندما يبدأ المالك البث ستتمكن من إرسال الأسئلة والتفاعل مباشرة.</div>
+                  <div className="text-xs font-bold text-[#B45309] leading-relaxed">عندما يبدأ المالك البث ستتمكن من إرسال الأسئلة.</div>
                 </div>
               </div>
             )}

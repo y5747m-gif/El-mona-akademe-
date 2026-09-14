@@ -1,15 +1,16 @@
 import { useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { GraduationCap, Eye, EyeOff, ArrowRight, Shield, Sparkles, Users, Radio, BookOpen, Lock, Mail, Hash, Crown } from 'lucide-react'
+import { GraduationCap, Eye, EyeOff, ArrowRight, Shield, Sparkles, Users, Radio, BookOpen, Lock, Hash, Crown } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 
 export default function Login() {
   const [search] = useSearchParams()
-  const initialRole = search.get('role') === 'owner' ? 'owner' : 'student'
+  const isOwnerAccess = search.get('role') === 'owner' && search.get('key') === 'elmona2026'
+  const initialRole = isOwnerAccess ? 'owner' : 'student'
   const [role, setRole] = useState(initialRole)
-  const [identifier, setIdentifier] = useState(role === 'owner' ? 'owner@elmona.com' : '')
-  const [password, setPassword] = useState(role === 'owner' ? 'owner123' : '')
+  const [identifier, setIdentifier] = useState('')
+  const [password, setPassword] = useState('')
   const [showPass, setShowPass] = useState(false)
   const [error, setError] = useState('')
   const { login, loading } = useAuth()
@@ -51,34 +52,47 @@ export default function Login() {
             animate={{ opacity: 1, y: 0 }}
             className="w-full max-w-[480px]"
           >
-            {/* Role switch */}
-            <div className="bg-[#EDEEF3] rounded-full p-1.5 flex gap-1.5 mb-6 shadow-inner">
-              <button
-                onClick={() => { setRole('student'); setError(''); setIdentifier(''); setPassword('') }}
-                className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-full font-black text-sm transition-all ${role === 'student' ? 'bg-white shadow-[0_4px_16px_rgba(0,0,0,0.08)] text-[#0B2447]' : 'text-[#64748B] hover:text-[#0B2447]'}`}
-              >
-                <GraduationCap className="w-4 h-4" />
-                حساب طالب
-              </button>
-              <button
-                onClick={() => { setRole('owner'); setError(''); setIdentifier('owner@elmona.com'); setPassword('owner123') }}
-                className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-full font-black text-sm transition-all ${role === 'owner' ? 'bg-[#0B2447] text-white shadow-[0_8px_20px_rgba(11,36,71,0.25)]' : 'text-[#64748B] hover:text-[#0B2447]'}`}
-              >
-                <Crown className="w-4 h-4" />
-                حساب المالك
-              </button>
-            </div>
+            {/* فقط الطالب ظاهر للعامة — المالك لا يظهر إلا برابط سري */}
+            {!isOwnerAccess ? (
+              <div className="bg-[#EDEEF3] rounded-full p-1.5 flex gap-1.5 mb-6 shadow-inner opacity-60">
+                <div className="flex-1 flex items-center justify-center gap-2 py-3 rounded-full bg-white shadow-[0_4px_16px_rgba(0,0,0,0.08)] text-[#0B2447] font-black text-sm">
+                  <GraduationCap className="w-4 h-4" />
+                  دخول الطلاب
+                </div>
+                <div className="flex-1 flex items-center justify-center gap-2 py-3 rounded-full text-[#94A3B8] font-bold text-xs">
+                  <Shield className="w-3.5 h-3.5" />
+                  دخول محمي
+                </div>
+              </div>
+            ) : (
+              <div className="bg-[#0B2447] rounded-full p-1.5 flex gap-1.5 mb-6 shadow-inner">
+                <button
+                  onClick={() => { setRole('student'); setError('') }}
+                  className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-full font-black text-sm transition-all ${role === 'student' ? 'bg-white text-[#0B2447]' : 'text-white/70 hover:text-white'}`}
+                >
+                  <GraduationCap className="w-4 h-4" />
+                  طالب
+                </button>
+                <button
+                  onClick={() => { setRole('owner'); setError('') }}
+                  className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-full font-black text-sm transition-all ${role === 'owner' ? 'bg-[#C5A253] text-white shadow-lg' : 'text-white/70 hover:text-white'}`}
+                >
+                  <Crown className="w-4 h-4" />
+                  المالك
+                </button>
+              </div>
+            )}
 
             <div className="bg-white rounded-[28px] shadow-[0_16px_48px_rgba(11,36,71,0.10)] border border-[#E2E8F0] overflow-hidden">
               <div className="px-6 sm:px-8 pt-8 pb-6">
                 <div className="flex items-start justify-between gap-4">
                   <div className="text-right">
                     <h1 className="font-black text-[24px] sm:text-[26px] leading-none text-[#0B2447] flex items-center gap-2">
-                      {role === 'owner' ? 'مرحباً بك يا مالك' : 'أهلاً بعودتك'}
+                      {role === 'owner' ? 'دخول الإدارة' : 'أهلاً بعودتك'}
                       <Sparkles className="w-5 h-5 text-[#C5A253]" />
                     </h1>
                     <p className="text-sm font-bold text-[#64748B] mt-2">
-                      {role === 'owner' ? 'لوحة تحكم المالك — إدارة الطلاب والبث المباشر' : 'سجل دخولك لمتابعة حصصك والبث المباشر'}
+                      {role === 'owner' ? 'واجهة محمية — للمالك فقط' : 'سجل دخولك لمتابعة حصصك والبث المباشر'}
                     </p>
                   </div>
                   <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 ${role === 'owner' ? 'bg-gradient-to-br from-[#C5A253] to-[#D4AF37] text-white' : 'bg-[#0B2447] text-white'}`}>
@@ -101,12 +115,12 @@ export default function Login() {
                       </label>
                       <div className="relative">
                         <span className="absolute inset-y-0 right-3 flex items-center text-[#94A3B8]">
-                          {role === 'owner' ? <Mail className="w-4 h-4" /> : <Hash className="w-4 h-4" />}
+                          <Hash className="w-4 h-4" />
                         </span>
                         <input
                           value={identifier}
                           onChange={e => setIdentifier(e.target.value)}
-                          placeholder={role === 'owner' ? 'owner@elmona.com' : 'مثال: STU-2024-001 أو ahmed@elmona.edu'}
+                          placeholder={role === 'owner' ? 'البريد الخاص بالمالك' : 'مثال: STU-2026-001 أو رقم الهاتف'}
                           className="w-full pr-10 pl-4 py-3.5 rounded-2xl bg-[#F8FAFC] border border-[#E2E8F0] focus:bg-white focus:border-[#0B2447] focus:ring-4 focus:ring-[#0B2447]/10 outline-none text-sm font-bold placeholder:text-[#94A3B8] transition"
                         />
                       </div>
@@ -143,19 +157,8 @@ export default function Login() {
                           <BookOpen className="w-4 h-4 text-[#D97706]" />
                         </div>
                         <div className="text-right">
-                          <div className="text-xs font-black text-[#92400E]">بيانات تجريبية للطلاب</div>
-                          <div className="text-xs font-bold text-[#B45309] leading-relaxed">كود: STU-2024-001 | كلمة السر: 123456 — أو جرب أي طالب أنشأه المالك</div>
-                        </div>
-                      </div>
-                    )}
-                    {role === 'owner' && (
-                      <div className="bg-[#EFF6FF] border border-[#BFDBFE] rounded-2xl px-4 py-3 flex gap-3">
-                        <div className="w-8 h-8 rounded-xl bg-white border border-[#BFDBFE] flex items-center justify-center shrink-0">
-                          <Crown className="w-4 h-4 text-[#0284C7]" />
-                        </div>
-                        <div className="text-right">
-                          <div className="text-xs font-black text-[#0C4A6E]">بيانات المالك الافتراضية</div>
-                          <div className="text-xs font-bold text-[#075985]">owner@elmona.com / owner123</div>
+                          <div className="text-xs font-black text-[#92400E]">تنبيه للطلاب</div>
+                          <div className="text-xs font-bold text-[#B45309] leading-relaxed">كود الدخول وكلمة السر تحصل عليها من إدارة الأكاديمية. لا تشاركها مع أحد.</div>
                         </div>
                       </div>
                     )}
@@ -181,7 +184,7 @@ export default function Login() {
                     </button>
 
                     <div className="flex items-center justify-between pt-2">
-                      <a href="#" className="text-xs font-black text-[#0284C7] hover:underline">نسيت كلمة السر؟</a>
+                      <a href="#" className="text-xs font-black text-[#0284C7] hover:underline">نسيت كلمة السر؟ تواصل مع الإدارة</a>
                       <span className="text-xs font-bold text-[#94A3B8]">الدعم: 0100 123 4567</span>
                     </div>
                   </motion.form>
@@ -200,11 +203,16 @@ export default function Login() {
             <p className="text-center text-xs font-bold text-[#94A3B8] mt-6">
               بتسجيل الدخول أنت توافق على <a href="#" className="underline decoration-dotted">الشروط والأحكام</a> و <a href="#" className="underline decoration-dotted">سياسة الخصوصية</a>
             </p>
+            {isOwnerAccess && (
+              <p className="text-center text-[11px] font-black text-[#C5A253] mt-3 bg-[#FFFBEB] border border-[#FDE68A] rounded-full px-4 py-2">
+                وضع المالك نشط — لا تشارك هذا الرابط مع أحد
+              </p>
+            )}
           </motion.div>
         </div>
       </div>
 
-      {/* Right - Visual */}
+      {/* Right - Visual - بدون صور أشخاص */}
       <div className="hidden lg:flex flex-1 relative overflow-hidden bg-gradient-to-br from-[#0B2447] via-[#0B2447] to-[#19376D] p-8">
         <div className="absolute inset-0">
           <div className="absolute inset-0 opacity-10" style={{ backgroundImage: `radial-gradient(circle at 1px 1px, white 1px, transparent 0)`, backgroundSize: '22px 22px' }} />
@@ -223,16 +231,18 @@ export default function Login() {
             <span className="text-[#FDE68A]">تفوق بثقة</span>
           </h2>
           <p className="mt-4 text-white/70 font-medium leading-7">
-            انضم لآلاف الطلاب المتفوقين. حصص مباشرة، مذكرات PDF، واجبات مصححة، وتقارير لولي الأمر — كل ذلك في مكان واحد.
+            انضم لطلاب أكاديمية المنى. حصص مباشرة، مذكرات PDF، واجبات مصححة، وتقارير لولي الأمر — كل ذلك في مكان واحد.
           </p>
 
           <div className="mt-8 bg-white rounded-[24px] p-5 shadow-[0_16px_48px_rgba(0,0,0,0.25)]">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <img src="https://i.pravatar.cc/100?img=11" alt="" className="w-10 h-10 rounded-xl object-cover" />
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#0B2447] to-[#19376D] flex items-center justify-center">
+                  <BookOpen className="w-5 h-5 text-white" />
+                </div>
                 <div className="text-right">
-                  <div className="font-black text-sm text-[#0B2447]">د. أحمد المنى</div>
-                  <div className="text-xs font-bold text-[#64748B]">فيزياء • مباشر الآن</div>
+                  <div className="font-black text-sm text-[#0B2447]">أكاديمية المنى</div>
+                  <div className="text-xs font-bold text-[#64748B]">بث مباشر • جودة عالية</div>
                 </div>
               </div>
               <span className="bg-red-600 text-white text-xs font-black px-3 py-1.5 rounded-full flex items-center gap-1.5 animate-pulse">
@@ -240,20 +250,20 @@ export default function Login() {
                 LIVE
               </span>
             </div>
-            <div className="mt-4 rounded-2xl overflow-hidden bg-[#0B2447] aspect-[16/9] relative flex items-center justify-center">
+            <div className="mt-4 rounded-2xl overflow-hidden bg-gradient-to-br from-[#0B2447] to-[#19376D] aspect-[16/9] relative flex items-center justify-center">
               <div className="absolute inset-0 opacity-20" style={{ backgroundImage: `radial-gradient(circle at 1px 1px, white 1px, transparent 0)`, backgroundSize: '18px 18px' }} />
               <div className="relative w-14 h-14 rounded-full bg-white flex items-center justify-center shadow-xl">
                 <BookOpen className="w-6 h-6 text-[#0B2447]" />
               </div>
               <div className="absolute bottom-3 inset-x-3 flex items-center justify-between">
                 <span className="bg-white text-[#0B2447] text-xs font-black px-3 py-1 rounded-full">01:24:18</span>
-                <span className="bg-black/40 backdrop-blur text-white text-xs font-bold px-3 py-1 rounded-full border border-white/20">1,342 مشاهد</span>
+                <span className="bg-black/40 backdrop-blur text-white text-xs font-bold px-3 py-1 rounded-full border border-white/20">بث آمن</span>
               </div>
             </div>
             <div className="grid grid-cols-3 gap-3 mt-4">
               {[
-                { k: '2,847', l: 'طالب نشط' },
-                { k: '98%', l: 'نسبة رضا' },
+                { k: 'HD', l: 'جودة عالية' },
+                { k: '24/7', l: 'دعم متواصل' },
                 { k: '+15', l: 'سنة خبرة' },
               ].map(s => (
                 <div key={s.l} className="bg-[#F8FAFC] rounded-2xl p-3 text-center border border-[#F1F5F9]">

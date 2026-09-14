@@ -27,10 +27,15 @@ export function AuthProvider({ children }) {
             resolve(u)
           } else {
             setLoading(false)
-            reject('بيانات المالك غير صحيحة. جرب owner@elmona.com / owner123')
+            reject('بيانات الإدارة غير صحيحة. هذا الدخول محمي ومخصص للمالك فقط.')
           }
         } else {
           const students = getStudents()
+          if (students.length === 0) {
+            setLoading(false)
+            reject('لا يوجد طلاب مسجلين بعد. تواصل مع إدارة الأكاديمية للحصول على كود الدخول.')
+            return
+          }
           const found = students.find(s =>
             (s.email === identifier || s.id === identifier || s.phone === identifier) && s.password === password
           )
@@ -42,7 +47,7 @@ export function AuthProvider({ children }) {
             resolve(u)
           } else {
             setLoading(false)
-            reject('بيانات الطالب غير صحيحة. تأكد من الكود/الإيميل وكلمة السر (الافتراضية 123456)')
+            reject('بيانات الطالب غير صحيحة. تأكد من الكود وكلمة السر المرسلة لك من الإدارة.')
           }
         }
       }, 700)
