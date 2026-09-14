@@ -13,8 +13,12 @@ let started = false
 
 // هل الموقع شغال في وضع التطوير؟ (في التطوير Vite HMR يتكفل بالتحديث الحي تلقائياً)
 function isDev() {
-  const s = document.querySelector('script[type="module"][src]')
-  return !s || (s.getAttribute('src') || '').includes('/src/')
+  const scripts = document.querySelectorAll('script[type="module"][src]')
+  for (const s of scripts) {
+    const src = s.getAttribute('src') || ''
+    if (src.startsWith('/src/') || src.startsWith('/@')) return true
+  }
+  return false
 }
 
 // بصمة النسخة الحالية = مسار ملف الجافاسكريبت + مسار ملف الستايل (فيهم هاش يتغير مع كل تحديث)
