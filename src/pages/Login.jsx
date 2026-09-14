@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { GraduationCap, Eye, EyeOff, ArrowRight, Shield, Sparkles, Users, Radio, BookOpen, Lock, Hash, Crown, Phone, MessageCircle, User, UsersRound } from 'lucide-react'
+import { GraduationCap, Eye, EyeOff, ArrowRight, Shield, Sparkles, Users, Radio, BookOpen, Lock, Crown, Phone, MessageCircle, User, UsersRound } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import { CONTACT_NUMBERS } from '../data/store'
 
@@ -139,10 +139,10 @@ export default function Login() {
                       className="mt-6 space-y-4"
                     >
                       <div>
-                        <label className="block text-xs font-black text-[#0B2447] mb-2 pr-1">إيميل المالك</label>
+                        <label className="block text-xs font-black text-[#0B2447] mb-2 pr-1">اسم المستخدم</label>
                         <div className="relative">
-                          <span className="absolute inset-y-0 right-3 flex items-center text-[#94A3B8]"><Hash className="w-4 h-4" /></span>
-                          <input value={identifier} onChange={e => setIdentifier(e.target.value)} placeholder="البريد الخاص بالمالك" className="w-full pr-10 pl-4 py-3.5 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] focus:bg-white focus:border-[#0B2447] focus:ring-4 focus:ring-[#0B2447]/10 outline-none text-sm font-bold placeholder:text-[#94A3B8] transition" />
+                          <span className="absolute inset-y-0 right-3 flex items-center text-[#94A3B8]"><User className="w-4 h-4" /></span>
+                          <input value={identifier} onChange={e => setIdentifier(e.target.value)} placeholder="اسم المستخدم الخاص بالمالك" className="w-full pr-10 pl-4 py-3.5 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] focus:bg-white focus:border-[#0B2447] focus:ring-4 focus:ring-[#0B2447]/10 outline-none text-sm font-bold placeholder:text-[#94A3B8] transition" />
                         </div>
                       </div>
                       <div>

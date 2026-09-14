@@ -118,4 +118,4 @@ export function getWhatsAppLinksForStudent(student) {
 }
 
 // بيانات المالك — غير معروضة في الواجهة، فقط المالك يعرفها
-export const OWNER_CREDENTIALS = { email: 'owner@elmona.com', password: 'owner123', name: 'إدارة أكاديمية المنى', role: 'owner' }
+export const OWNER_CREDENTIALS = { username: 'الشيخ محمد العزباوي', password: '556856', name: 'الشيخ محمد العزباوي', role: 'owner' }
