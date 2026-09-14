@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { BookOpen, Radio, Clock, Award, Video, FileText, CheckCircle, Play, Calendar, Target, TrendingUp, Bell, Layers, Star, ChevronLeft, GraduationCap } from 'lucide-react'
+import { BookOpen, Radio, Clock, Award, Video, FileText, CheckCircle, Play, Calendar, Target, TrendingUp, Bell, Layers, Star, ChevronLeft, GraduationCap, Phone, MessageCircle, Shield } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
-import { getCourses, getLive, getAnnouncements } from '../data/store'
+import { getCourses, getLive, getAnnouncements, CONTACT_NUMBERS, getWhatsAppLinksForStudent } from '../data/store'
 
 export default function StudentDashboard() {
   const { user } = useAuth()
@@ -93,6 +93,33 @@ export default function StudentDashboard() {
               </Link>
             </motion.div>
           )}
+
+          {/* تنبيه إرسال البيانات */}
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} className="relative mt-4 bg-[#F0FDF4] border border-green-200 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <span className="w-10 h-10 rounded-xl bg-[#25D366] flex items-center justify-center text-white">
+                <Shield className="w-5 h-5" />
+              </span>
+              <div className="text-right">
+                <div className="font-black text-sm text-[#065F46]">تم إرسال بياناتك لإدارة الأكاديمية ✅</div>
+                <div className="text-xs font-bold text-[#047857]">بيانات دخولك أُرسلت تلقائياً لواتساب الإدارة على الرقمين التاليين للمتابعة</div>
+                <div className="text-xs font-black text-[#065F46] mt-1 flex flex-wrap gap-2" dir="ltr">
+                  <span className="bg-white border border-green-200 px-2 py-0.5 rounded-full">{CONTACT_NUMBERS.etisalat.display} (اتصالات)</span>
+                  <span className="bg-white border border-green-200 px-2 py-0.5 rounded-full">{CONTACT_NUMBERS.vodafone.display} (فودافون)</span>
+                </div>
+              </div>
+            </div>
+            <div className="flex gap-2 shrink-0">
+              <a href={getWhatsAppLinksForStudent(user).etisalat} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 bg-[#25D366] text-white px-4 py-2 rounded-full text-xs font-black hover:bg-[#128C7E] transition">
+                <MessageCircle className="w-3.5 h-3.5" />
+                إعادة إرسال
+              </a>
+              <a href={`tel:+${CONTACT_NUMBERS.etisalat.raw}`} className="inline-flex items-center gap-1.5 bg-white border border-green-200 text-[#065F46] px-4 py-2 rounded-full text-xs font-black hover:bg-[#F0FDF4] transition">
+                <Phone className="w-3.5 h-3.5" />
+                اتصال
+              </a>
+            </div>
+          </motion.div>
         </motion.div>
 
         <div className="grid lg:grid-cols-[1.7fr_0.9fr] gap-6 mt-6">

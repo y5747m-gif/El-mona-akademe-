@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import { Award, BookOpen, Radio, Star, ArrowLeft, Check, GraduationCap, Clock, Video, MessageCircle, Shield, Zap, Crown, Sparkles, ChevronLeft, Trophy, Target, Users, Layers, FileText } from 'lucide-react'
-import { getLive, getCourses } from '../data/store'
+import { Award, BookOpen, Radio, Star, ArrowLeft, Check, GraduationCap, Clock, Video, MessageCircle, Shield, Zap, Crown, Sparkles, ChevronLeft, Trophy, Target, Users, Layers, FileText, Phone, PhoneCall } from 'lucide-react'
+import { getLive, getCourses, CONTACT_NUMBERS } from '../data/store'
 import { useEffect, useState } from 'react'
 
 function useLivePoll() {
@@ -459,6 +459,100 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* قسم التواصل السريع */}
+      <section id="contact" className="py-12 sm:py-16 bg-[#F8FAFC]">
+        <div className="max-w-[1280px] mx-auto px-4 sm:px-6">
+          <div className="bg-white rounded-[32px] border border-[#E2E8F0] shadow-[0_16px_48px_rgba(11,36,71,0.08)] overflow-hidden">
+            <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-0">
+              <div className="p-8 sm:p-10">
+                <div className="inline-flex items-center gap-2 bg-[#EFF6FF] border border-[#BFDBFE] text-[#0C4A6E] rounded-full px-4 py-1.5 text-xs font-black mb-4">
+                  <Phone className="w-4 h-4" />
+                  تواصل معنا — للشكاوى والاستفسارات
+                </div>
+                <h3 className="font-black text-[26px] sm:text-[32px] leading-none text-[#0B2447]">نحن هنا لمساعدتك</h3>
+                <p className="mt-3 text-sm font-bold text-[#64748B] leading-7">للشكاوى، الاستفسارات، أو الحصول على كود الدخول — تواصل مباشرة على واتساب أو اتصال. نرد خلال دقائق.</p>
+
+                <div className="grid sm:grid-cols-2 gap-4 mt-8">
+                  <a href={`tel:+${CONTACT_NUMBERS.etisalat.raw}`} className="group bg-gradient-to-br from-[#0B2447] to-[#19376D] rounded-2xl p-5 text-white relative overflow-hidden hover:shadow-[0_12px_32px_rgba(11,36,71,0.25)] hover:scale-[1.02] transition-all">
+                    <div className="absolute -top-10 -right-10 w-24 h-24 bg-white/10 rounded-full blur-2xl" />
+                    <div className="relative">
+                      <div className="flex items-center gap-2">
+                        <span className="w-8 h-8 rounded-xl bg-white/15 flex items-center justify-center"><PhoneCall className="w-4 h-4" /></span>
+                        <span className="text-xs font-black bg-white/15 px-2 py-0.5 rounded-full">{CONTACT_NUMBERS.etisalat.name}</span>
+                      </div>
+                      <div className="font-black text-lg mt-3 leading-none" dir="ltr">{CONTACT_NUMBERS.etisalat.display}</div>
+                      <div className="text-xs font-bold text-white/70 mt-1">اتصال + واتساب</div>
+                      <div className="flex gap-2 mt-4">
+                        <span className="flex-1 inline-flex items-center justify-center gap-1 bg-white text-[#0B2447] rounded-full py-2 text-xs font-black group-hover:bg-[#FFFBEB] transition">
+                          <Phone className="w-3.5 h-3.5" />
+                          اتصال
+                        </span>
+                        <span className="flex-1 inline-flex items-center justify-center gap-1 bg-[#25D366] text-white rounded-full py-2 text-xs font-black">
+                          <MessageCircle className="w-3.5 h-3.5" />
+                          واتساب
+                        </span>
+                      </div>
+                    </div>
+                  </a>
+
+                  <a href={`tel:+${CONTACT_NUMBERS.vodafone.raw}`} className="group bg-white border-2 border-[#E2E8F0] rounded-2xl p-5 hover:border-[#C5A253]/30 hover:shadow-[0_12px_32px_rgba(197,162,83,0.15)] hover:scale-[1.02] transition-all">
+                    <div className="flex items-center gap-2">
+                      <span className="w-8 h-8 rounded-xl bg-[#FF0000] flex items-center justify-center text-white"><PhoneCall className="w-4 h-4" /></span>
+                      <span className="text-xs font-black bg-[#F1F5F9] text-[#0B2447] px-2 py-0.5 rounded-full">{CONTACT_NUMBERS.vodafone.name}</span>
+                    </div>
+                    <div className="font-black text-lg mt-3 leading-none text-[#0B2447]" dir="ltr">{CONTACT_NUMBERS.vodafone.display}</div>
+                    <div className="text-xs font-bold text-[#64748B] mt-1">اتصال + واتساب</div>
+                    <div className="flex gap-2 mt-4">
+                      <span className="flex-1 inline-flex items-center justify-center gap-1 bg-[#0B2447] text-white rounded-full py-2 text-xs font-black group-hover:bg-[#19376D] transition">
+                        <Phone className="w-3.5 h-3.5" />
+                        اتصال
+                      </span>
+                      <span className="flex-1 inline-flex items-center justify-center gap-1 bg-[#25D366] text-white rounded-full py-2 text-xs font-black">
+                        <MessageCircle className="w-3.5 h-3.5" />
+                        واتساب
+                      </span>
+                    </div>
+                  </a>
+                </div>
+
+                <div className="mt-6 flex flex-wrap gap-2">
+                  <a href={`https://wa.me/${CONTACT_NUMBERS.etisalat.raw}?text=${encodeURIComponent('السلام عليكم، أريد الاستفسار عن أكاديمية المنى')}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 bg-[#25D366] text-white px-5 py-2.5 rounded-full font-black text-sm hover:bg-[#128C7E] transition">
+                    <MessageCircle className="w-4 h-4" />
+                    واتساب اتصالات
+                  </a>
+                  <a href={`https://wa.me/${CONTACT_NUMBERS.vodafone.raw}?text=${encodeURIComponent('السلام عليكم، أريد الاستفسار عن أكاديمية المنى')}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 bg-white border border-[#E2E8F0] text-[#0B2447] px-5 py-2.5 rounded-full font-black text-sm hover:bg-[#F8FAFC] transition">
+                    <MessageCircle className="w-4 h-4 text-[#25D366]" />
+                    واتساب فودافون
+                  </a>
+                </div>
+              </div>
+
+              <div className="bg-gradient-to-br from-[#0B2447] via-[#0B2447] to-[#19376D] p-8 sm:p-10 flex flex-col justify-center relative overflow-hidden">
+                <div className="absolute inset-0 opacity-10" style={{ backgroundImage: `radial-gradient(circle at 1px 1px, white 1px, transparent 0)`, backgroundSize: '18px 18px' }} />
+                <div className="absolute -top-20 -right-20 w-64 h-64 bg-[#C5A253]/20 rounded-full blur-3xl" />
+                <div className="relative">
+                  <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center shadow-xl">
+                    <Shield className="w-6 h-6 text-[#0B2447]" />
+                  </div>
+                  <h4 className="font-black text-white text-xl mt-4 leading-tight">تنبيه للطلاب</h4>
+                  <p className="text-white/70 font-bold text-sm leading-7 mt-2">بعد تسجيل دخولك سيتم إرسال بياناتك كاملة تلقائياً إلى أرقام الإدارة على واتساب للمتابعة والتأكيد. تأكد من أن بياناتك صحيحة.</p>
+                  <div className="mt-6 space-y-3">
+                    <div className="flex items-center gap-3 bg-white/10 backdrop-blur border border-white/15 rounded-2xl p-3">
+                      <span className="w-8 h-8 rounded-xl bg-[#25D366] flex items-center justify-center text-white"><Check className="w-4 h-4" /></span>
+                      <span className="text-sm font-black text-white">إرسال تلقائي لواتساب الإدارة</span>
+                    </div>
+                    <div className="flex items-center gap-3 bg-white/10 backdrop-blur border border-white/15 rounded-2xl p-3">
+                      <span className="w-8 h-8 rounded-xl bg-[#C5A253] flex items-center justify-center text-white"><Clock className="w-4 h-4" /></span>
+                      <span className="text-sm font-black text-white">رد فوري خلال دقائق</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <footer className="bg-[#070F1F] text-white">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 py-10">
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -483,16 +577,31 @@ export default function Landing() {
               <ul className="space-y-2 text-sm text-white/60 font-bold">
                 <li><a href="#courses" className="hover:text-white">الكورسات</a></li>
                 <li><a href="#about" className="hover:text-white">عن الأكاديمية</a></li>
+                <li><a href="#contact" className="hover:text-white">تواصل معنا</a></li>
                 <li><Link to="/live" className="hover:text-white">البث المباشر</Link></li>
                 <li><Link to="/login" className="hover:text-white">دخول الطلاب</Link></li>
               </ul>
             </div>
             <div>
-              <div className="font-black mb-3">تواصل معنا</div>
-              <ul className="space-y-2 text-sm text-white/60 font-bold">
-                <li>0100 123 4567</li>
-                <li>info@elmona.edu.eg</li>
-                <li>القاهرة - مدينة نصر</li>
+              <div className="font-black mb-3">تواصل معنا — شكاوى واستفسارات</div>
+              <ul className="space-y-3 text-sm font-bold">
+                <li className="flex flex-col gap-2">
+                  <a href={`tel:+${CONTACT_NUMBERS.etisalat.raw}`} className="flex items-center gap-2 bg-white/10 border border-white/15 rounded-xl px-3 py-2 hover:bg-white/15 transition" dir="ltr">
+                    <span className="w-7 h-7 rounded-full bg-[#0B2447] flex items-center justify-center"><Phone className="w-3.5 h-3.5 text-white" /></span>
+                    <span className="text-white flex-1">{CONTACT_NUMBERS.etisalat.display}</span>
+                    <span className="text-[11px] bg-[#C5A253] text-white px-2 py-0.5 rounded-full">اتصالات</span>
+                  </a>
+                  <a href={`tel:+${CONTACT_NUMBERS.vodafone.raw}`} className="flex items-center gap-2 bg-white/10 border border-white/15 rounded-xl px-3 py-2 hover:bg-white/15 transition" dir="ltr">
+                    <span className="w-7 h-7 rounded-full bg-[#FF0000] flex items-center justify-center"><Phone className="w-3.5 h-3.5 text-white" /></span>
+                    <span className="text-white flex-1">{CONTACT_NUMBERS.vodafone.display}</span>
+                    <span className="text-[11px] bg-white text-[#0B2447] px-2 py-0.5 rounded-full">فودافون</span>
+                  </a>
+                </li>
+                <li className="flex gap-2">
+                  <a href={`https://wa.me/${CONTACT_NUMBERS.etisalat.raw}`} target="_blank" rel="noreferrer" className="flex-1 bg-[#25D366] text-white rounded-full py-2 text-center font-black hover:bg-[#128C7E] transition">واتساب</a>
+                  <a href={`tel:+${CONTACT_NUMBERS.etisalat.raw}`} className="flex-1 bg-white text-[#0B2447] rounded-full py-2 text-center font-black hover:bg-[#FFFBEB] transition">اتصال</a>
+                </li>
+                <li className="text-white/60 text-xs">القاهرة - مدينة نصر • info@elmona.edu.eg</li>
               </ul>
             </div>
           </div>

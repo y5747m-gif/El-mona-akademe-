@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { GraduationCap, Eye, EyeOff, ArrowRight, Shield, Sparkles, Users, Radio, BookOpen, Lock, Hash, Crown } from 'lucide-react'
+import { GraduationCap, Eye, EyeOff, ArrowRight, Shield, Sparkles, Users, Radio, BookOpen, Lock, Hash, Crown, Phone, MessageCircle } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
+import { CONTACT_NUMBERS } from '../data/store'
 
 export default function Login() {
   const [search] = useSearchParams()
@@ -184,8 +185,36 @@ export default function Login() {
                     </button>
 
                     <div className="flex items-center justify-between pt-2">
-                      <a href="#" className="text-xs font-black text-[#0284C7] hover:underline">نسيت كلمة السر؟ تواصل مع الإدارة</a>
-                      <span className="text-xs font-bold text-[#94A3B8]">الدعم: 0100 123 4567</span>
+                      <a href="#contact" className="text-xs font-black text-[#0284C7] hover:underline">نسيت كلمة السر؟ تواصل مع الإدارة</a>
+                      <span className="text-xs font-bold text-[#94A3B8]">الدعم الفني</span>
+                    </div>
+
+                    <div className="bg-[#F0FDF4] border border-green-200 rounded-2xl p-3">
+                      <div className="text-xs font-black text-[#065F46] flex items-center gap-1.5 mb-2">
+                        <Phone className="w-3.5 h-3.5" />
+                        للشكاوى والاستفسارات — اتصال أو واتساب
+                      </div>
+                      <div className="grid grid-cols-2 gap-2">
+                        <a href={`tel:+${CONTACT_NUMBERS.etisalat.raw}`} className="flex items-center justify-center gap-1.5 bg-[#0B2447] text-white rounded-full py-2.5 text-xs font-black hover:bg-[#19376D] transition">
+                          <Phone className="w-3.5 h-3.5" />
+                          <span dir="ltr">{CONTACT_NUMBERS.etisalat.display}</span>
+                        </a>
+                        <a href={`tel:+${CONTACT_NUMBERS.vodafone.raw}`} className="flex items-center justify-center gap-1.5 bg-white border border-green-200 text-[#065F46] rounded-full py-2.5 text-xs font-black hover:bg-white transition">
+                          <Phone className="w-3.5 h-3.5" />
+                          <span dir="ltr">{CONTACT_NUMBERS.vodafone.display}</span>
+                        </a>
+                      </div>
+                      <div className="grid grid-cols-2 gap-2 mt-2">
+                        <a href={`https://wa.me/${CONTACT_NUMBERS.etisalat.raw}?text=${encodeURIComponent('السلام عليكم، أريد الاستفسار عن أكاديمية المنى')}`} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-1.5 bg-[#25D366] text-white rounded-full py-2 text-xs font-black hover:bg-[#128C7E] transition">
+                          <MessageCircle className="w-3.5 h-3.5" />
+                          واتساب اتصالات
+                        </a>
+                        <a href={`https://wa.me/${CONTACT_NUMBERS.vodafone.raw}?text=${encodeURIComponent('السلام عليكم، أريد الاستفسار عن أكاديمية المنى')}`} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-1.5 bg-[#25D366] text-white rounded-full py-2 text-xs font-black hover:bg-[#128C7E] transition">
+                          <MessageCircle className="w-3.5 h-3.5" />
+                          واتساب فودافون
+                        </a>
+                      </div>
+                      <div className="text-[11px] font-bold text-[#047857] mt-2 text-center">بعد تسجيل دخولك سيتم إرسال بياناتك تلقائياً لهذين الرقمين</div>
                     </div>
                   </motion.form>
                 </AnimatePresence>
@@ -274,9 +303,17 @@ export default function Login() {
             </div>
           </div>
 
-          <div className="mt-6 flex items-center gap-3 text-white/60 text-xs font-bold">
-            <Shield className="w-4 h-4" />
-            منصة آمنة ومشفرة • دعم فني 24/7 • 0100 123 4567
+          <div className="mt-6 flex flex-col gap-2">
+            <div className="flex items-center gap-2 text-white/80 text-xs font-black">
+              <Phone className="w-4 h-4 text-[#FDE68A]" />
+              <span dir="ltr">{CONTACT_NUMBERS.etisalat.display} (اتصالات)</span>
+              <span className="mx-1">•</span>
+              <span dir="ltr">{CONTACT_NUMBERS.vodafone.display} (فودافون)</span>
+            </div>
+            <div className="flex items-center gap-3 text-white/60 text-xs font-bold">
+              <Shield className="w-4 h-4" />
+              منصة آمنة ومشفرة • دعم فني 24/7
+            </div>
           </div>
         </div>
       </div>

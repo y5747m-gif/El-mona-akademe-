@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Users, UserPlus, Search, Trash2, Edit3, Radio, Video, Square, Crown, GraduationCap, BookOpen, TrendingUp, Bell, Shield, LogOut, Eye, EyeOff, Filter, Download, Award, Clock, MessageCircle, Send, Check, X, AlertTriangle, Sparkles } from 'lucide-react'
+import { Users, UserPlus, Search, Trash2, Edit3, Radio, Video, Square, Crown, GraduationCap, BookOpen, TrendingUp, Bell, Shield, LogOut, Eye, EyeOff, Filter, Download, Award, Clock, MessageCircle, Send, Check, X, AlertTriangle, Sparkles, Phone, MessageCircleMore, Smartphone } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
-import { getStudents, saveStudents, getLive, saveLive, getCourses, getAnnouncements, saveAnnouncements, OWNER_CREDENTIALS } from '../data/store'
+import { getStudents, saveStudents, getLive, saveLive, getCourses, getAnnouncements, saveAnnouncements, OWNER_CREDENTIALS, CONTACT_NUMBERS, getLoginLogs, getWhatsAppLinksForStudent, buildStudentLoginMessage } from '../data/store'
 import { Link } from 'react-router-dom'
 
 export default function OwnerDashboard() {
@@ -21,12 +21,13 @@ export default function OwnerDashboard() {
   const [showPassword, setShowPassword] = useState(false)
 
   const [form, setForm] = useState({ name: '', email: '', phone: '', level: 'الثانوية العامة', group: 'المجموعة A - فيزياء', password: '123456' })
+  const [loginLogs, setLoginLogs] = useState(getLoginLogs())
 
   useEffect(() => {
-    const onUpdate = () => { setStudents(getStudents()); setLive(getLive()) }
+    const onUpdate = () => { setStudents(getStudents()); setLive(getLive()); setLoginLogs(getLoginLogs()) }
     window.addEventListener('students-updated', onUpdate)
     window.addEventListener('live-updated', onUpdate)
-    const i = setInterval(() => setLive(getLive()), 1500)
+    const i = setInterval(() => { setLive(getLive()); setLoginLogs(getLoginLogs()) }, 1500)
     return () => { window.removeEventListener('students-updated', onUpdate); window.removeEventListener('live-updated', onUpdate); clearInterval(i) }
   }, [])
 
@@ -149,6 +150,88 @@ export default function OwnerDashboard() {
             <Link to="/" className="w-9 h-9 rounded-full bg-white border border-[#E2E8F0] flex items-center justify-center hover:bg-[#F8FAFC] text-[#64748B]">
               <Eye className="w-4 h-4" />
             </Link>
+          </div>
+        </div>
+
+        {/* أرقام التواصل */}
+        <div className="mt-6 bg-white rounded-[20px] border border-[#E2E8F0] p-4 sm:p-5 shadow-[0_4px_20px_rgba(0,0,0,0.04)]">
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div className="w-11 h-11 rounded-2xl bg-[#25D366] flex items-center justify-center text-white">
+                <MessageCircleMore className="w-6 h-6" />
+              </div>
+              <div className="text-right">
+                <div className="font-black text-[#0B2447]">أرقام التواصل — للشكاوى والاستفسارات</div>
+                <div className="text-xs font-bold text-[#64748B]">بيانات دخول الطلاب تُرسل تلقائياً لهذين الرقمين على واتساب</div>
+              </div>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <a href={`tel:+${CONTACT_NUMBERS.etisalat.raw}`} className="flex items-center justify-center gap-2 bg-gradient-to-br from-[#0B2447] to-[#19376D] text-white px-5 py-3 rounded-full font-black text-sm hover:scale-[1.02] transition">
+                <Phone className="w-4 h-4" />
+                <span dir="ltr">{CONTACT_NUMBERS.etisalat.display}</span>
+                <span className="bg-white/20 px-2 py-0.5 rounded-full text-xs">اتصالات</span>
+              </a>
+              <a href={`tel:+${CONTACT_NUMBERS.vodafone.raw}`} className="flex items-center justify-center gap-2 bg-white border-2 border-[#E2E8F0] text-[#0B2447] px-5 py-3 rounded-full font-black text-sm hover:bg-[#F8FAFC] transition">
+                <Phone className="w-4 h-4" />
+                <span dir="ltr">{CONTACT_NUMBERS.vodafone.display}</span>
+                <span className="bg-[#F1F5F9] px-2 py-0.5 rounded-full text-xs">فودافون</span>
+              </a>
+              <a href={`https://wa.me/${CONTACT_NUMBERS.etisalat.raw}`} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 bg-[#25D366] text-white px-5 py-3 rounded-full font-black text-sm hover:bg-[#128C7E] transition">
+                <MessageCircle className="w-4 h-4" />
+                واتساب
+              </a>
+            </div>
+          </div>
+        </div>
+
+        {/* سجل دخول الطلاب */}
+        <div className="mt-6 bg-gradient-to-br from-[#0B2447] to-[#19376D] rounded-[24px] p-5 sm:p-6 text-white relative overflow-hidden">
+          <div className="absolute -top-10 -left-10 w-40 h-40 bg-white/10 rounded-full blur-2xl" />
+          <div className="relative">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <h3 className="font-black flex items-center gap-2">
+                <span className="w-8 h-8 rounded-xl bg-white/15 flex items-center justify-center"><Smartphone className="w-4 h-4" /></span>
+                سجل دخول الطلاب — يُرسل تلقائياً لواتساب
+                <span className="bg-[#C5A253] text-white text-xs px-2.5 py-1 rounded-full">{loginLogs.length}</span>
+              </h3>
+              {loginLogs.length > 0 && (
+                <button onClick={() => { if(confirm('مسح سجل الدخول؟')){ localStorage.setItem('elmona_login_logs', JSON.stringify([])); setLoginLogs([]) } }} className="text-xs font-black bg-white/15 border border-white/20 px-3 py-1.5 rounded-full hover:bg-white/20 transition">مسح السجل</button>
+              )}
+            </div>
+            {loginLogs.length === 0 ? (
+              <div className="mt-4 bg-white/10 backdrop-blur border border-white/15 rounded-2xl p-6 text-center">
+                <Clock className="w-8 h-8 text-white/60 mx-auto" />
+                <div className="font-black mt-2">لا يوجد تسجيل دخول بعد</div>
+                <div className="text-white/60 text-xs font-bold mt-1">عندما يسجل أي طالب دخوله، ستصلك بياناته كاملة فوراً على واتساب الرقمين + واتسجل هنا</div>
+              </div>
+            ) : (
+              <div className="mt-4 space-y-3 max-h-[320px] overflow-y-auto pr-1">
+                {loginLogs.slice(0, 20).map(log => {
+                  const student = { id: log.studentId, name: log.name, email: log.email, phone: log.phone, level: log.level, group: log.group, status: 'نشط', attendance: 0, avg: 0 }
+                  const links = getWhatsAppLinksForStudent(student)
+                  return (
+                    <div key={log.id} className="bg-white rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                      <div className="text-right">
+                        <div className="font-black text-sm text-[#0B2447]">{log.name} • <span className="text-[#C5A253]">{log.studentId}</span></div>
+                        <div className="text-xs font-bold text-[#64748B]">{log.group} • {log.phone} • {log.email}</div>
+                        <div className="text-[11px] font-bold text-[#94A3B8] mt-1">{new Date(log.at).toLocaleString('ar-EG')}</div>
+                      </div>
+                      <div className="flex gap-2 shrink-0">
+                        <a href={links.etisalat} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 bg-[#25D366] text-white px-3 py-2 rounded-full text-xs font-black hover:bg-[#128C7E] transition">
+                          <MessageCircle className="w-3.5 h-3.5" />
+                          واتساب اتصالات
+                        </a>
+                        <a href={links.vodafone} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 bg-[#0B2447] text-white px-3 py-2 rounded-full text-xs font-black hover:bg-[#19376D] transition">
+                          <MessageCircle className="w-3.5 h-3.5" />
+                          فودافون
+                        </a>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            )}
+            <div className="mt-3 text-[11px] font-bold text-white/60">يتم الإرسال التلقائي عند كل تسجيل دخول طالب — إذا حجب المتصفح النوافذ، استخدم أزرار إعادة الإرسال أعلاه</div>
           </div>
         </div>
 
