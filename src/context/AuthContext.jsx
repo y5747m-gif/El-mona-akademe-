@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react'
-import { getStudents, OWNER_CREDENTIALS, initStore, addLoginLog, buildStudentLoginMessage, getWhatsAppLinksForStudent } from '../data/store'
+import { getStudents, OWNER_CREDENTIALS, initStore, addLoginLog, getWhatsAppLinksForStudent } from '../data/store'
 
 const AuthContext = createContext(null)
 
@@ -36,36 +36,61 @@ export function AuthProvider({ children }) {
             reject('لا يوجد طلاب مسجلين بعد. تواصل مع إدارة الأكاديمية على 01140752330 أو 01061240956 للحصول على كود الدخول.')
             return
           }
-          const found = students.find(s =>
-            (s.email === identifier || s.id === identifier || s.phone === identifier) && s.password === password
-          )
+
+          let found = null
+
+          // الحالة الجديدة: تسجيل دخول بالاسم واسم ولي الأمر ورقم الهاتف (مثل نموذج التسجيل بالضبط)
+          if (typeof identifier === 'object' && identifier !== null) {
+            const { studentName, parentName, primaryPhone, secondaryPhone } = identifier
+            const sName = (studentName || '').trim()
+            const pName = (parentName || '').trim()
+            const pPhone = (primaryPhone || '').trim()
+            const sPhone = (secondaryPhone || '').trim()
+
+            found = students.find(s => {
+              const matchName = s.studentName ? s.studentName.trim() === sName : s.name.trim() === sName
+              const matchParent = s.parentName ? s.parentName.trim() === pName : false
+              const matchPhone = s.primaryPhone ? s.primaryPhone.trim() === pPhone : s.phone === pPhone
+              // إذا كان رقم ولي الأمر موجود، نتأكد أيضاً (اختياري)
+              const matchParentPhone = sPhone ? (s.secondaryPhone ? s.secondaryPhone.trim() === sPhone : true) : true
+              return matchName && matchParent && matchPhone && matchParentPhone
+            })
+            // توافق خلفي: لو لم يوجد بالمطابقة الدقيقة، جرب مطابقة الاسم والهاتف فقط
+            if (!found) {
+              found = students.find(s => {
+                const n = s.studentName || s.name
+                const ph = s.primaryPhone || s.phone
+                return n.trim() === sName && ph === pPhone
+              })
+            }
+          } else {
+            // الطريقة القديمة: كود/إيميل/هاتف + كلمة سر
+            found = students.find(s =>
+              (s.email === identifier || s.id === identifier || s.phone === identifier || s.primaryPhone === identifier || s.studentName === identifier) && s.password === password
+            )
+          }
+
           if (found) {
             const u = { ...found, role: 'student' }
             localStorage.setItem('elmona_user', JSON.stringify(u))
             setUser(u)
 
-            // حفظ سجل الدخول + إرسال البيانات كاملة لرقم الإدارة عبر واتساب
             const entry = {
               id: Date.now(),
               studentId: found.id,
-              name: found.name,
+              name: found.studentName || found.name,
               email: found.email,
-              phone: found.phone,
-              level: found.level,
+              phone: found.primaryPhone || found.phone,
+              level: found.grade || found.level,
               group: found.group,
               at: new Date().toISOString(),
             }
             addLoginLog(entry)
 
-            // إرسال تلقائي لواتساب الإدارة (نفتح في الخلفية + نحفظ للمالك)
             try {
               const links = getWhatsAppLinksForStudent(found)
-              // نفتح واتساب اتصالات ثم فودافون بتأخير بسيط — مع منع البوب أب بلوك عبر تأخير
-              // نحفظ أيضاً في localStorage ليظهر في لوحة المالك
               localStorage.setItem('elmona_last_login_whatsapp', JSON.stringify({ student: found, links, at: entry.at }))
-              // محاولة فتح تلقائي (قد يُحجب، لذا نعرض أيضاً زر في لوحة الطالب)
               setTimeout(() => {
-                // نستخدم window.open في سياق تفاعل المستخدم (الضغط على تسجيل دخول) لذا سيُسمح في معظم المتصفحات
                 window.open(links.etisalat, '_blank')
               }, 400)
               setTimeout(() => {
@@ -77,7 +102,11 @@ export function AuthProvider({ children }) {
             resolve(u)
           } else {
             setLoading(false)
-            reject('بيانات الطالب غير صحيحة. تأكد من الكود وكلمة السر المرسلة لك من الإدارة. للمساعدة: 01140752330 / 01061240956')
+            if (typeof identifier === 'object') {
+              reject('بيانات الطالب غير صحيحة. تأكد من كتابة اسم الطالب واسم ولي الأمر ورقم الهاتف مثل ما سجلت بالضبط. للمساعدة: 01140752330 / 01061240956')
+            } else {
+              reject('بيانات الطالب غير صحيحة. تأكد من الكود وكلمة السر المرسلة لك من الإدارة. للمساعدة: 01140752330 / 01061240956')
+            }
           }
         }
       }, 700)

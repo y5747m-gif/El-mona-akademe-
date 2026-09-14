@@ -3,6 +3,7 @@ import { AuthProvider, useAuth } from './context/AuthContext'
 import Navbar from './components/Navbar'
 import Landing from './pages/Landing'
 import Login from './pages/Login'
+import Register from './pages/Register'
 import StudentDashboard from './pages/StudentDashboard'
 import OwnerDashboard from './pages/OwnerDashboard'
 import LiveRoom from './pages/LiveRoom'
@@ -13,7 +14,6 @@ function Protected({ children, allow }) {
   const { user } = useAuth()
   const location = useLocation()
   if (!user) {
-    // للمالك نحتاج مفتاح سري
     if (allow === 'owner') return <Navigate to={`/login?role=owner&key=elmona2026`} state={{ from: location }} replace />
     return <Navigate to={`/login`} state={{ from: location }} replace />
   }
@@ -47,11 +47,14 @@ function FloatingContact() {
 
 function AppRoutes() {
   const { user } = useAuth()
+  const location = useLocation()
+  const isRegister = location.pathname === '/register'
   return (
     <>
-      <Navbar />
+      {!isRegister && <Navbar />}
       <Routes>
         <Route path="/" element={<Landing />} />
+        <Route path="/register" element={<Register />} />
         <Route path="/login" element={
           user ? (user.role === 'owner' ? <Navigate to="/owner" replace /> : <Navigate to="/student" replace />) : <Login />
         } />

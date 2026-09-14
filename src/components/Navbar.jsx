@@ -29,8 +29,10 @@ export default function Navbar() {
 
   const navLinks = [
     { to: '/', label: 'الرئيسية' },
+    { to: '/register', label: 'تسجيل الطالب' },
     { to: '/#courses', label: 'الكورسات' },
     { to: '/#about', label: 'عن الأكاديمية' },
+    { to: '/#contact', label: 'تواصل معنا' },
   ]
 
   return (
@@ -91,9 +93,14 @@ export default function Navbar() {
             )}
 
             {!user ? (
-              <Link to="/login" className="inline-flex items-center gap-2 px-6 sm:px-7 py-2.5 rounded-full bg-gradient-to-br from-[#0B2447] to-[#19376D] text-white text-sm font-black shadow-[0_8px_20px_rgba(11,36,71,0.3)] hover:shadow-[0_12px_28px_rgba(11,36,71,0.4)] hover:scale-[1.02] transition-all btn-shimmer">
-                دخول الطلاب
-              </Link>
+              <div className="flex items-center gap-2">
+                <Link to="/register" className="hidden sm:inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white border border-[#E2E8F0] text-sm font-bold text-[#14332B] hover:bg-[#F8FAFC] transition">
+                  تسجيل الطالب
+                </Link>
+                <Link to="/login" className="inline-flex items-center gap-2 px-6 sm:px-7 py-2.5 rounded-full bg-gradient-to-br from-[#0B2447] to-[#19376D] text-white text-sm font-black shadow-[0_8px_20px_rgba(11,36,71,0.3)] hover:shadow-[0_12px_28px_rgba(11,36,71,0.4)] hover:scale-[1.02] transition-all btn-shimmer">
+                  دخول الطلاب
+                </Link>
+              </div>
             ) : (
               <div className="flex items-center gap-2">
                 <Link
@@ -136,9 +143,10 @@ export default function Navbar() {
                 <a key={l.label} href={l.to} onClick={() => setMobileOpen(false)} className="px-4 py-3 rounded-xl text-sm font-bold hover:bg-[#F8FAFC] text-[#0B2447]">{l.label}</a>
               ))}
               {!user && (
-                <div className="mt-3 pt-3 border-t">
+                <div className="mt-3 pt-3 border-t grid grid-cols-2 gap-2">
+                  <Link to="/register" onClick={() => setMobileOpen(false)} className="block py-3 rounded-xl bg-white border border-[#E2E8F0] text-[#14332B] text-center font-bold text-sm">تسجيل الطالب</Link>
                   <Link to="/login" onClick={() => setMobileOpen(false)} className="block py-3 rounded-xl bg-[#0B2447] text-white text-center font-bold text-sm">دخول الطلاب</Link>
-                  <div className="text-[11px] font-bold text-[#94A3B8] text-center mt-2">للطالب فقط — واجهة المالك محمية</div>
+                  <div className="col-span-2 text-[11px] font-bold text-[#94A3B8] text-center mt-1">للطالب فقط — واجهة المالك محمية</div>
                 </div>
               )}
             </nav>
