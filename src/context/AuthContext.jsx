@@ -19,7 +19,9 @@ export function AuthProvider({ children }) {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         if (role === 'owner') {
-          if (identifier === OWNER_CREDENTIALS.email && password === OWNER_CREDENTIALS.password) {
+          // توحيد المسافات حتى ينفع الدخول حتى لو فيه مسافات زيادة في الاسم
+          const norm = (v) => (v || '').trim().replace(/\s+/g, ' ')
+          if (norm(identifier) === norm(OWNER_CREDENTIALS.username) && password === OWNER_CREDENTIALS.password) {
             const u = { ...OWNER_CREDENTIALS, id: 'OWNER-001' }
             localStorage.setItem('elmona_user', JSON.stringify(u))
             setUser(u)
